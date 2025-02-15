@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FiSun, FiMoon, FiMenu } from 'react-icons/fi'; // React Icons
+import { useAuth } from '../context/AuthProvider';
+import Logout from './Logout';
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [sticky, setsticky] = useState(false);
-
+  
+  const [AuthUser, setAuthUser] = useAuth();
   
 
   useEffect(() => {
@@ -51,7 +55,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <a href="#" className="text-2xl font-bold text-gray-800">BookStore</a>
+          <a href="/" className="text-2xl font-bold text-gray-800">BookStore</a>
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex space-x-[50px] items-center">
@@ -65,31 +69,28 @@ const Navbar = () => {
               <input type="text" className="border rounded-[5px] p-1" placeholder="Search" />
             </div>
 
-            {/* Dark/Light Mode Toggle */}
-            <button onClick={toggleTheme} className="focus:outline-none">
-              {isDarkMode ? (
-                <FiSun className="h-6 w-6 text-yellow-500" />
-              ) : (
-                <FiMoon className="h-6 w-6 text-gray-600" />
-              )}
-            </button>
+            
           </div>
 
-          {/* Login Button (Always Visible) */}
+
+          {/* we want when user is logged in then show logout otherwise not */}
+
+          {
+            AuthUser? <Logout/> : (<button className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 hover:cursor-pointer">
+              <a href="/login">Login</a>
+            </button>)
+          }
+
+
+
+          {/* Login Button (Always Visible)
           <button className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 hover:cursor-pointer">
             <a href="/login">Login</a>
-          </button>
+          </button> */}
 
           {/* Mobile Icons */}
           <div className="flex items-center lg:hidden space-x-4">
-            {/* Dark/Light Mode Toggle (Mobile) */}
-            <button onClick={toggleTheme} className="focus:outline-none">
-              {isDarkMode ? (
-                <FiSun className="h-6 w-6 text-yellow-500" />
-              ) : (
-                <FiMoon className="h-6 w-6 text-gray-600" />
-              )}
-            </button>
+            
 
             {/* Hamburger Menu Icon */}
             <button onClick={toggleMenu} className="focus:outline-none">
@@ -102,10 +103,10 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div className={`lg:hidden ${isMenuOpen ? 'block' : 'hidden'} bg-white border-t shadow-md`}>
         <ul className="space-y-2 px-4 py-4">
-          <li><a href="#" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">Home</a></li>
-          <li><a href="#" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">Course</a></li>
-          <li><a href="#" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">Contact Us</a></li>
-          <li><a href="#" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">About</a></li>
+          <li><a href="/" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">Home</a></li>
+          <li><a href="/books" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">Books</a></li>
+          <li><a href="/contact" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">Contact Us</a></li>
+          <li><a href="/about" onClick={closeMenu} className="block text-gray-600 hover:text-gray-800">About</a></li>
         </ul>
       </div>
     </nav>

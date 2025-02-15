@@ -1,15 +1,44 @@
 import React from 'react';
 import { useForm } from "react-hook-form"
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import {  useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-
+        const location = useLocation();
+        const from = location.state?.from?.pathname || "/";
+        const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors },
       } = useForm()
 
-      const onSubmit = (data) => console.log(data)
+      const onSubmit = async (data) => {
+        console.log("Form Data:", data);
+        const userInfo = {
+
+          email: data.email,
+          password: data.password
+  
+        }
+
+        await axios.post("http://localhost:3001/user/login", userInfo )
+        .then((res) =>{
+          console.log(res.data)
+          if(res.data){
+            toast.success("Login successfully")
+            navigate(from, {replace: true});
+            //window.location.reload();   // Reload the page after login automatically
+          }
+          localStorage.setItem("Users", JSON.stringify(res.data.User));
+        })
+        .catch((err) =>{
+          if(err.response){
+            toast.error("Invalid Password or Email");
+          }
+        })
+      }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

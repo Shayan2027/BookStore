@@ -1,8 +1,30 @@
 import React from 'react';
-import BookList from "../../public/BookList.json";
+// import BookList from "../../public/BookList.json";
 import Cards from './Cards';
+import { useState, useEffect } from 'react';
+import axios from "axios"
 
 const Books = () => {
+
+const [Booklist, setBooklist] = useState([])
+useEffect(() => {
+
+  const getBook = async() =>{
+    try {
+      const res = await axios.get('http://localhost:3001/book')
+      console.log(res);
+      setBooklist(res.data)
+      
+    } catch (error) {
+      console.log("Error", error);
+      
+    }
+  }
+
+  getBook();
+}, [])
+
+
   return (
     <div className='mt-[80px] px-4 sm:px-6 md:px-10 lg:px-16 py-[30px]'>
 
@@ -24,7 +46,7 @@ const Books = () => {
 
       {/* Cards Section */}
       <div className='div2 mt-[50px] px-[10px] sm:px-[20px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[30px]'>
-        {BookList.map((item) => (
+        {Booklist.map((item) => (
           <Cards key={item.id} item={item} />
         ))}
       </div>
